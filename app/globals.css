@@ -1,0 +1,119 @@
+@import "tailwindcss";
+
+/**
+ * WV Detail design tokens.
+ * Dark-first: near-black canvas, charcoal surfaces, high-contrast text,
+ * a single red accent reserved for CTAs and small emphasis marks.
+ */
+:root {
+  /* Surfaces */
+  --wv-black: #0a0b0c;
+  --wv-surface: #131518;
+  --wv-surface-2: #1b1e22;
+  --wv-border: #292d33;
+  --wv-border-strong: #3a3f47;
+
+  /* Text */
+  --wv-text: #f5f6f7;
+  --wv-text-muted: #a3a9b3;
+  --wv-text-subtle: #7c828c;
+
+  /* Light section */
+  --wv-offwhite: #f4f4f2;
+  --wv-offwhite-border: #dcdcd6;
+  --wv-ink: #14161a;
+  --wv-ink-muted: #4a5058;
+
+  /* Accent */
+  --wv-red: #d21f27;
+  --wv-red-hover: #b81a21;
+  --wv-red-soft: #f05a60;
+}
+
+@theme inline {
+  --color-background: var(--wv-black);
+  --color-foreground: var(--wv-text);
+
+  --color-wv-black: var(--wv-black);
+  --color-wv-surface: var(--wv-surface);
+  --color-wv-surface-2: var(--wv-surface-2);
+  --color-wv-border: var(--wv-border);
+  --color-wv-border-strong: var(--wv-border-strong);
+
+  --color-wv-text: var(--wv-text);
+  --color-wv-muted: var(--wv-text-muted);
+  --color-wv-subtle: var(--wv-text-subtle);
+
+  --color-wv-offwhite: var(--wv-offwhite);
+  --color-wv-offwhite-border: var(--wv-offwhite-border);
+  --color-wv-ink: var(--wv-ink);
+  --color-wv-ink-muted: var(--wv-ink-muted);
+
+  --color-wv-red: var(--wv-red);
+  --color-wv-red-hover: var(--wv-red-hover);
+  --color-wv-red-soft: var(--wv-red-soft);
+
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+}
+
+html {
+  scroll-behavior: smooth;
+  -webkit-text-size-adjust: 100%;
+}
+
+body {
+  background-color: var(--wv-black);
+  color: var(--wv-text);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  text-rendering: optimizeLegibility;
+}
+
+/* Visible, consistent focus for keyboard users. */
+:focus-visible {
+  outline: 2px solid var(--wv-red-soft);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+::selection {
+  background-color: var(--wv-red);
+  color: #fff;
+}
+
+@keyframes wv-fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+.wv-fade-up {
+  animation: wv-fade-up 500ms ease-out both;
+}
+
+/* Subtle, non-repeating hero treatment: no imagery, no gradient wash. */
+.wv-hero-grid {
+  background-image:
+    linear-gradient(to right, rgba(255, 255, 255, 0.035) 1px, transparent 1px),
+    linear-gradient(to bottom, rgba(255, 255, 255, 0.035) 1px, transparent 1px);
+  background-size: 72px 72px;
+  mask-image: radial-gradient(ellipse 80% 60% at 50% 0%, #000 30%, transparent 75%);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
