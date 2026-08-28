@@ -2,7 +2,7 @@
 
 import { useEffect, useId, useRef, useState, type FormEvent } from 'react';
 import Link from 'next/link';
-import { ArrowRight, MessageSquare, Phone } from 'lucide-react';
+import { ArrowRight, ChevronDown, MessageSquare, Phone } from 'lucide-react';
 import { business } from '@/data/business';
 import { conditionDisclaimer, services } from '@/data/services';
 import { resolved } from '@/lib/todo';
@@ -41,9 +41,7 @@ import {
 type Status = 'idle' | 'submitting' | 'success' | 'error';
 
 interface DraftState {
-  year: string;
-  make: string;
-  model: string;
+  vehicle: string;
   size: string;
   service: string;
   interiorCondition: string;
@@ -57,9 +55,7 @@ interface DraftState {
 }
 
 const emptyDraft: DraftState = {
-  year: '',
-  make: '',
-  model: '',
+  vehicle: '',
   size: '',
   service: '',
   interiorCondition: '',
@@ -90,6 +86,7 @@ export function QuoteForm({ initialService = '' }: QuoteFormProps) {
   const [errors, setErrors] = useState<FieldErrors>({});
   const [status, setStatus] = useState<Status>('idle');
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
+  const [detailsOpen, setDetailsOpen] = useState(false);
   const honeypotRef = useRef<HTMLInputElement | null>(null);
   const mountedAt = useRef<number | null>(null);
   const summaryRef = useRef<HTMLDivElement | null>(null);
@@ -133,9 +130,7 @@ export function QuoteForm({ initialService = '' }: QuoteFormProps) {
     if (status === 'submitting') return;
 
     const candidate = {
-      year: draft.year,
-      make: draft.make,
-      model: draft.model,
+      vehicle: draft.vehicle,
       size: draft.size,
       service: draft.service,
       interiorCondition: isConditionLevel(draft.interiorCondition)
@@ -234,17 +229,19 @@ export function QuoteForm({ initialService = '' }: QuoteFormProps) {
   const errorCount = Object.keys(errors).length;
 
   const requiredFields = [
-    draft.year,
-    draft.make,
-    draft.model,
+    draft.vehicle,
     draft.size,
     draft.service,
     draft.name,
     draft.phone,
-    draft.email,
   ] as const;
   const completedCount = requiredFields.filter((value) => value.trim() !== '').length;
   const totalRequired = requiredFields.length;
+
+  // Force the optional-detail disclosure open if validation finds an error inside it,
+  // so a hidden error is never silently missed. Derived at render time rather than
+  // synced via an effect, so the user can still close it once the error clears.
+  const hasDetailErrors = Boolean(errors.notes || errors.preferredDate);
 
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
@@ -289,62 +286,31 @@ export function QuoteForm({ initialService = '' }: QuoteFormProps) {
       <FormGroup
         step={1}
         title="Your Vehicle"
-        description="Size determines the pricing tier for most services."
+        description="Size and service determine the price; the rest helps us confirm it."
       >
-        <div className="grid gap-6 sm:grid-cols-3">
-          <Field
-            id={fieldId('year')}
-            label="Year"
-            required
-            error={errors.year}
-            className="sm:col-span-1"
-          >
-            <input
-              id={fieldId('year')}
-              name="year"
-              type="text"
-              inputMode="numeric"
-              autoComplete="off"
-              maxLength={4}
-              value={draft.year}
-              onChange={(event) => update('year', event.target.value)}
-              aria-required="true"
-              aria-invalid={errors.year ? true : undefined}
-              aria-describedby={describedBy(errors.year && `${fieldId('year')}-error`)}
-              className={cn(fieldControlClasses, errors.year && fieldErrorClasses)}
-            />
-          </Field>
-
-          <Field id={fieldId('make')} label="Make" required error={errors.make}>
-            <input
-              id={fieldId('make')}
-              name="make"
-              type="text"
-              autoComplete="off"
-              value={draft.make}
-              onChange={(event) => update('make', event.target.value)}
-              aria-required="true"
-              aria-invalid={errors.make ? true : undefined}
-              aria-describedby={describedBy(errors.make && `${fieldId('make')}-error`)}
-              className={cn(fieldControlClasses, errors.make && fieldErrorClasses)}
-            />
-          </Field>
-
-          <Field id={fieldId('model')} label="Model" required error={errors.model}>
-            <input
-              id={fieldId('model')}
-              name="model"
-              type="text"
-              autoComplete="off"
-              value={draft.model}
-              onChange={(event) => update('model', event.target.value)}
-              aria-required="true"
-              aria-invalid={errors.model ? true : undefined}
-              aria-describedby={describedBy(errors.model && `${fieldId('model')}-error`)}
-              className={cn(fieldControlClasses, errors.model && fieldErrorClasses)}
-            />
-          </Field>
-        </div>
+        <Field
+          id={fieldId('vehicle')}
+          label="Year, make, and model"
+          hint="For example: 2020 Toyota Camry"
+          required
+          error={errors.vehicle}
+        >
+          <input
+            id={fieldId('vehicle')}
+            name="vehicle"
+            type="text"
+            autoComplete="off"
+            value={draft.vehicle}
+            onChange={(event) => update('vehicle', event.target.value)}
+            aria-required="true"
+            aria-invalid={errors.vehicle ? true : undefined}
+            aria-describedby={describedBy(
+              `${fieldId('vehicle')}-hint`,
+              errors.vehicle && `${fieldId('vehicle')}-error`,
+            )}
+            className={cn(fieldControlClasses, errors.vehicle && fieldErrorClasses)}
+          />
+        </Field>
 
         <Fieldset
           legend="Vehicle size"
@@ -367,13 +333,7 @@ export function QuoteForm({ initialService = '' }: QuoteFormProps) {
             ))}
           </div>
         </Fieldset>
-      </FormGroup>
 
-      <FormGroup
-        step={2}
-        title="Service Needed"
-        description="Not sure which one fits? Choose the last option and we'll recommend one."
-      >
         <Field
           id={fieldId('service')}
           label="Service"
@@ -403,65 +363,7 @@ export function QuoteForm({ initialService = '' }: QuoteFormProps) {
         </Field>
       </FormGroup>
 
-      <FormGroup
-        step={3}
-        title="Vehicle Condition"
-        description="An honest read here helps us quote accurately the first time."
-      >
-        <Fieldset legend="Interior condition">
-          <div className="grid gap-3 sm:grid-cols-3">
-            {conditionLevelOptions.map((option) => (
-              <ChoiceCard
-                key={option.value}
-                type="radio"
-                name="interiorCondition"
-                value={option.value}
-                label={option.label}
-                checked={draft.interiorCondition === option.value}
-                onChange={(value) => update('interiorCondition', value)}
-              />
-            ))}
-          </div>
-        </Fieldset>
-
-        <Fieldset legend="Exterior condition">
-          <div className="grid gap-3 sm:grid-cols-3">
-            {conditionLevelOptions.map((option) => (
-              <ChoiceCard
-                key={option.value}
-                type="radio"
-                name="exteriorCondition"
-                value={option.value}
-                label={option.label}
-                checked={draft.exteriorCondition === option.value}
-                onChange={(value) => update('exteriorCondition', value)}
-              />
-            ))}
-          </div>
-        </Fieldset>
-
-        <Fieldset
-          legend="Anything that applies"
-          hint="Select all that apply."
-          hintId={`${fieldId('flags')}-hint`}
-        >
-          <div className="grid gap-3 sm:grid-cols-2">
-            {conditionFlagOptions.map((option) => (
-              <ChoiceCard
-                key={option.value}
-                type="checkbox"
-                name="conditionFlags"
-                value={option.value}
-                label={option.label}
-                checked={draft.conditionFlags.includes(option.value)}
-                onChange={toggleFlag}
-              />
-            ))}
-          </div>
-        </Fieldset>
-      </FormGroup>
-
-      <FormGroup step={4} title="Contact Info">
+      <FormGroup step={2} title="Contact Info">
         <div className="grid gap-6 sm:grid-cols-2">
           <Field id={fieldId('name')} label="Name" required error={errors.name}>
             <input
@@ -497,7 +399,6 @@ export function QuoteForm({ initialService = '' }: QuoteFormProps) {
           <Field
             id={fieldId('email')}
             label="Email"
-            required
             error={errors.email}
             className="sm:col-span-2"
           >
@@ -509,12 +410,88 @@ export function QuoteForm({ initialService = '' }: QuoteFormProps) {
               autoComplete="email"
               value={draft.email}
               onChange={(event) => update('email', event.target.value)}
-              aria-required="true"
               aria-invalid={errors.email ? true : undefined}
               aria-describedby={describedBy(errors.email && `${fieldId('email')}-error`)}
               className={cn(fieldControlClasses, errors.email && fieldErrorClasses)}
             />
           </Field>
+        </div>
+      </FormGroup>
+
+      <details
+        open={detailsOpen || hasDetailErrors}
+        onToggle={(event) => setDetailsOpen(event.currentTarget.open)}
+        className="group rounded-lg border border-wv-border bg-wv-surface p-5 sm:p-7"
+      >
+        <summary className="flex cursor-pointer list-none items-center justify-between gap-3 [&::-webkit-details-marker]:hidden">
+          <div>
+            <p className="text-lg font-bold tracking-tight text-wv-text">
+              Add more detail
+              <span className="ml-2 text-xs font-normal text-wv-subtle">Optional</span>
+            </p>
+            <p className="mt-1 text-sm text-wv-muted">
+              Vehicle condition, a preferred date, or anything else. We&apos;ll ask when
+              we follow up if you skip it.
+            </p>
+          </div>
+          <ChevronDown
+            aria-hidden="true"
+            className="h-5 w-5 shrink-0 text-wv-muted transition-transform group-open:rotate-180"
+          />
+        </summary>
+
+        <div className="mt-6 flex flex-col gap-6">
+          <Fieldset legend="Interior condition">
+            <div className="grid gap-3 sm:grid-cols-3">
+              {conditionLevelOptions.map((option) => (
+                <ChoiceCard
+                  key={option.value}
+                  type="radio"
+                  name="interiorCondition"
+                  value={option.value}
+                  label={option.label}
+                  checked={draft.interiorCondition === option.value}
+                  onChange={(value) => update('interiorCondition', value)}
+                />
+              ))}
+            </div>
+          </Fieldset>
+
+          <Fieldset legend="Exterior condition">
+            <div className="grid gap-3 sm:grid-cols-3">
+              {conditionLevelOptions.map((option) => (
+                <ChoiceCard
+                  key={option.value}
+                  type="radio"
+                  name="exteriorCondition"
+                  value={option.value}
+                  label={option.label}
+                  checked={draft.exteriorCondition === option.value}
+                  onChange={(value) => update('exteriorCondition', value)}
+                />
+              ))}
+            </div>
+          </Fieldset>
+
+          <Fieldset
+            legend="Anything that applies"
+            hint="Select all that apply."
+            hintId={`${fieldId('flags')}-hint`}
+          >
+            <div className="grid gap-3 sm:grid-cols-2">
+              {conditionFlagOptions.map((option) => (
+                <ChoiceCard
+                  key={option.value}
+                  type="checkbox"
+                  name="conditionFlags"
+                  value={option.value}
+                  label={option.label}
+                  checked={draft.conditionFlags.includes(option.value)}
+                  onChange={toggleFlag}
+                />
+              ))}
+            </div>
+          </Fieldset>
 
           <Field
             id={fieldId('preferredDate')}
@@ -532,34 +509,34 @@ export function QuoteForm({ initialService = '' }: QuoteFormProps) {
               className={cn(fieldControlClasses)}
             />
           </Field>
-        </div>
 
-        <Field
-          id={fieldId('notes')}
-          label="Anything else we should know"
-          error={errors.notes}
-        >
-          <textarea
+          <Field
             id={fieldId('notes')}
-            name="notes"
-            rows={4}
-            value={draft.notes}
-            onChange={(event) => update('notes', event.target.value)}
-            aria-invalid={errors.notes ? true : undefined}
-            aria-describedby={describedBy(errors.notes && `${fieldId('notes')}-error`)}
-            className={cn(fieldControlClasses, errors.notes && fieldErrorClasses)}
-          />
-        </Field>
-        {phone && smsHref ? (
-          <p className="text-sm text-wv-muted">
-            Have photos of the vehicle? Text them to{' '}
-            <a href={smsHref} className="font-medium text-wv-red-soft hover:text-wv-text">
-              {phone}
-            </a>{' '}
-            after you submit and we&apos;ll match them to your quote.
-          </p>
-        ) : null}
-      </FormGroup>
+            label="Anything else we should know"
+            error={errors.notes}
+          >
+            <textarea
+              id={fieldId('notes')}
+              name="notes"
+              rows={4}
+              value={draft.notes}
+              onChange={(event) => update('notes', event.target.value)}
+              aria-invalid={errors.notes ? true : undefined}
+              aria-describedby={describedBy(errors.notes && `${fieldId('notes')}-error`)}
+              className={cn(fieldControlClasses, errors.notes && fieldErrorClasses)}
+            />
+          </Field>
+          {phone && smsHref ? (
+            <p className="text-sm text-wv-muted">
+              Have photos of the vehicle? Text them to{' '}
+              <a href={smsHref} className="font-medium text-wv-red-soft hover:text-wv-text">
+                {phone}
+              </a>{' '}
+              after you submit and we&apos;ll match them to your quote.
+            </p>
+          ) : null}
+        </div>
+      </details>
 
       {/* Honeypot: hidden from people, tempting to bots. */}
       <div aria-hidden="true" className="absolute left-[-9999px] h-0 w-0 overflow-hidden">

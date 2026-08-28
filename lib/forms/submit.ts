@@ -125,14 +125,15 @@ export async function submitQuote(
           .join(', ')
       : 'None noted';
 
+  const email = values.email?.trim() ?? '';
+
   const payload: Record<string, string> = {
-    subject: `Quote request - ${values.year} ${values.make} ${values.model}`,
+    subject: `Quote request - ${values.vehicle}`,
     from_name: `${business.name} website`,
-    replyto: values.email,
     'Customer name': values.name,
     Phone: values.phone,
-    Email: values.email,
-    Vehicle: `${values.year} ${values.make} ${values.model}`,
+    Email: email || 'Not provided',
+    Vehicle: values.vehicle,
     'Vehicle size': labelFor(vehicleSizeOptions, values.size),
     'Service requested': serviceLabel(values.service),
     'Interior condition': labelFor(conditionLevelOptions, values.interiorCondition),
@@ -141,6 +142,8 @@ export async function submitQuote(
     'Preferred date': values.preferredDate?.trim() || 'Not specified',
     Notes: values.notes?.trim() || 'None',
   };
+
+  if (email) payload.replyto = email;
 
   return post(withCaptcha(payload, context));
 }

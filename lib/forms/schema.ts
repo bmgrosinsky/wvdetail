@@ -92,22 +92,25 @@ const phoneField = z
   .min(1, 'Please enter a phone number.')
   .regex(phonePattern, 'Please enter a 10-digit phone number.');
 
-const currentYear = new Date().getFullYear();
+/** Free text rather than separate year/make/model fields - a human reads it either way. */
+const vehicleField = z
+  .string()
+  .trim()
+  .min(2, 'Please tell us the year, make, and model.')
+  .max(80, 'Please use 80 characters or fewer.');
+
+/** Optional on the quote form: phone is the primary contact channel here. */
+const optionalEmailField = z
+  .string()
+  .trim()
+  .max(160, 'Please use 160 characters or fewer.')
+  .optional()
+  .refine((value) => !value || emailField.safeParse(value).success, {
+    message: 'Please enter a valid email address.',
+  });
 
 export const quoteSchema = z.object({
-  year: z
-    .string()
-    .trim()
-    .regex(/^\d{4}$/, 'Please enter a 4-digit year.')
-    .refine(
-      (value) => {
-        const parsed = Number.parseInt(value, 10);
-        return parsed >= 1900 && parsed <= currentYear + 2;
-      },
-      { message: `Please enter a year between 1900 and ${currentYear + 2}.` },
-    ),
-  make: z.string().trim().min(1, 'Please enter the vehicle make.').max(40),
-  model: z.string().trim().min(1, 'Please enter the vehicle model.').max(40),
+  vehicle: vehicleField,
   size: z.enum(vehicleSizeValues, { message: 'Please choose a vehicle size.' }),
   service: z.enum(serviceOptionValues, { message: 'Please choose a service.' }),
   interiorCondition: z.enum(conditionLevelValues).optional(),
@@ -115,7 +118,7 @@ export const quoteSchema = z.object({
   conditionFlags: z.array(z.enum(conditionFlagValues)),
   name: nameField,
   phone: phoneField,
-  email: emailField,
+  email: optionalEmailField,
   preferredDate: z.string().trim().max(40).optional(),
   notes: z.string().trim().max(2000, 'Please use 2000 characters or fewer.').optional(),
 });
