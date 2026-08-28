@@ -63,7 +63,7 @@ export function PricingCard({
       )}
 
       <Link
-        href={primaryCta.href}
+        href={`/quote?service=${service.slug}`}
         className={buttonClasses(highlighted ? 'primary' : 'secondary', 'md', 'mt-6 w-full')}
       >
         {primaryCta.label}
