@@ -40,5 +40,7 @@ yarn-error.log*
 *.tsbuildinfo
 next-env.d.ts
 
-.vercel
-.env*
+# local AI coding tool config (agent-generated; not part of the app)
+.claude/
+CLAUDE.md
+AGENTS.md
