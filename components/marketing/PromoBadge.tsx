@@ -16,11 +16,11 @@ export function PromoBadge({ className }: PromoBadgeProps) {
   return (
     <p
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-full border border-wv-red-soft/40 bg-wv-red-soft/10 px-3 py-1 text-xs font-semibold text-wv-red-soft',
+        'inline-flex items-center gap-2 rounded-full border border-wv-red-soft/40 bg-wv-red-soft/10 px-4 py-1.5 text-sm font-bold text-wv-red-soft sm:text-base',
         className,
       )}
     >
-      <Clock className="h-3.5 w-3.5" aria-hidden="true" />
+      <Clock className="h-4 w-4 sm:h-5 sm:w-5" aria-hidden="true" />
       {promo.label} if you book in the next {promo.formatted}
     </p>
   );
