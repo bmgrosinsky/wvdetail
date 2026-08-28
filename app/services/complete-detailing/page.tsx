@@ -17,7 +17,9 @@ import { business } from '@/data/business';
 import type { Faq, Service, VehicleClass } from '@/types';
 
 export const metadata: Metadata = {
-  title: 'Complete Detailing',
+  title: {
+    absolute: `Complete Auto Detailing in ${business.cityState} | ${business.name}`,
+  },
   description: `Complete interior and exterior detailing in ${business.cityState}. Both halves of the vehicle in one appointment, bundled below the price of booking them separately.`,
   alternates: { canonical: '/services/complete-detailing' },
 };

@@ -2,7 +2,6 @@ import Link from 'next/link';
 import { Check } from 'lucide-react';
 import type { Service } from '@/types';
 import { vehicleClasses } from '@/data/services';
-import { primaryCta } from '@/data/navigation';
 import { buttonClasses } from '@/components/ui/Button';
 
 interface ServiceDetailProps {
@@ -82,10 +81,10 @@ export function ServiceDetail({ service, as: Heading = 'h3' }: ServiceDetailProp
             ))}
           </dl>
           <Link
-            href={primaryCta.href}
+            href={`/quote?service=${service.slug}`}
             className={buttonClasses('primary', 'md', 'mt-5 w-full')}
           >
-            {primaryCta.label}
+            Get a Quote
           </Link>
         </div>
       </div>

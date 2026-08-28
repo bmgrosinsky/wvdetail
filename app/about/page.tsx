@@ -9,7 +9,7 @@ import { CTASection } from '@/components/marketing/CTASection';
 import { business } from '@/data/business';
 
 export const metadata: Metadata = {
-  title: 'About',
+  title: { absolute: `About | ${business.name}` },
   description: `${business.name} is an auto detailing service in ${business.cityState}: careful workmanship, straightforward pricing, and results you can see.`,
   alternates: { canonical: '/about' },
 };

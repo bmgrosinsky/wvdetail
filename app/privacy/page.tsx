@@ -5,7 +5,7 @@ import { business } from '@/data/business';
 import { resolved } from '@/lib/todo';
 
 export const metadata: Metadata = {
-  title: 'Privacy',
+  title: { absolute: `Privacy | ${business.name}` },
   description: `How ${business.name} handles the information you send through the website.`,
   alternates: { canonical: '/privacy' },
   openGraph: {

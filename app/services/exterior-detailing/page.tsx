@@ -17,7 +17,7 @@ import { business } from '@/data/business';
 import type { Faq, Service } from '@/types';
 
 export const metadata: Metadata = {
-  title: 'Exterior Detailing',
+  title: { absolute: `Exterior Detailing in ${business.cityState} | ${business.name}` },
   description: `Exterior detailing in ${business.cityState}. Hand wash, wheels and tires, paint decontamination, and sealant protection, priced by vehicle size.`,
   alternates: { canonical: '/services/exterior-detailing' },
 };

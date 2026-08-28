@@ -3,9 +3,10 @@ import { Container } from '@/components/ui/Container';
 import { QuoteForm } from '@/components/forms/QuoteForm';
 import { business } from '@/data/business';
 import { serviceAreaNames } from '@/data/serviceAreas';
+import { serviceOptionValues } from '@/lib/forms/schema';
 
 export const metadata: Metadata = {
-  title: 'Get a Quote',
+  title: { absolute: `Get a Quote | ${business.name}` },
   description: `Request a detailing quote from ${business.name} in ${business.cityState}. Tell us about your vehicle, the service you want, and its condition, and we'll follow up with pricing.`,
   alternates: { canonical: '/quote' },
   openGraph: {
@@ -16,8 +17,20 @@ export const metadata: Metadata = {
   },
 };
 
-export default function QuotePage() {
+type QuotePageProps = {
+  searchParams: Promise<{ [key: string]: string | string[] | undefined }>;
+};
+
+function isServiceOption(value: string): value is (typeof serviceOptionValues)[number] {
+  return (serviceOptionValues as readonly string[]).includes(value);
+}
+
+export default async function QuotePage({ searchParams }: QuotePageProps) {
   const areas = serviceAreaNames.slice(0, 4).join(', ');
+  const params = await searchParams;
+  const requested = params.service;
+  const serviceParam = typeof requested === 'string' ? requested : undefined;
+  const initialService = serviceParam && isServiceOption(serviceParam) ? serviceParam : '';
 
   return (
     <div className="bg-wv-black pb-24 sm:pb-20">
@@ -36,7 +49,7 @@ export default function QuotePage() {
           </p>
         </header>
 
-        <QuoteForm />
+        <QuoteForm initialService={initialService} />
       </Container>
     </div>
   );

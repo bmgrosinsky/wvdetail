@@ -18,7 +18,7 @@ const inter = Inter({
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: `${business.name} | Auto Detailing in ${business.cityState}`,
+    default: `Auto Detailing in ${business.cityState} | ${business.name}`,
     template: `%s | ${business.name}`,
   },
   description: business.shortDescription,
@@ -32,7 +32,7 @@ export const metadata: Metadata = {
     'Jackson Michigan',
   ],
   openGraph: {
-    title: `${business.name} | Auto Detailing in ${business.cityState}`,
+    title: `Auto Detailing in ${business.cityState} | ${business.name}`,
     description: business.shortDescription,
     url: siteUrl,
     siteName: business.name,

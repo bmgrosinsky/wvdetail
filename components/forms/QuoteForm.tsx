@@ -74,9 +74,17 @@ function isConditionLevel(value: string): value is ConditionLevel {
   return (conditionLevelValues as readonly string[]).includes(value);
 }
 
-export function QuoteForm() {
+interface QuoteFormProps {
+  /** Pre-selects the "Service Needed" field, e.g. from a `?service=` link. */
+  readonly initialService?: string;
+}
+
+export function QuoteForm({ initialService = '' }: QuoteFormProps) {
   const uid = useId();
-  const [draft, setDraft] = useState<DraftState>(emptyDraft);
+  const [draft, setDraft] = useState<DraftState>({
+    ...emptyDraft,
+    service: initialService,
+  });
   const [errors, setErrors] = useState<FieldErrors>({});
   const [status, setStatus] = useState<Status>('idle');
   const [turnstileToken, setTurnstileToken] = useState<string | null>(null);
@@ -514,6 +522,16 @@ export function QuoteForm() {
         >
           {status === 'submitting' ? 'Sending...' : 'Send quote request'}
         </Button>
+
+        {phone && phoneHref ? (
+          <p className="text-sm text-wv-muted">
+            Prefer to talk it through?{' '}
+            <a href={phoneHref} className="font-medium text-wv-red-soft hover:text-wv-text">
+              Call {phone}
+            </a>{' '}
+            instead.
+          </p>
+        ) : null}
       </div>
     </form>
   );

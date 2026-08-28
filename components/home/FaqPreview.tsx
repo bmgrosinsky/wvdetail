@@ -3,6 +3,7 @@ import { ArrowRight } from 'lucide-react';
 import { Section } from '@/components/ui/Section';
 import { SectionHeading } from '@/components/ui/SectionHeading';
 import { FAQAccordion } from '@/components/marketing/FAQAccordion';
+import { FaqJsonLd } from '@/components/seo/FaqJsonLd';
 import { featuredFaqs } from '@/data/faqs';
 
 export function FaqPreview() {
@@ -10,6 +11,7 @@ export function FaqPreview() {
 
   return (
     <Section tone="dark" containerSize="wide" ariaLabelledBy="faq-heading">
+      <FaqJsonLd items={featuredFaqs} id="ld-faq-home" />
       <div className="grid gap-10 lg:grid-cols-[minmax(0,0.85fr)_minmax(0,1.15fr)]">
         <SectionHeading
           id="faq-heading"

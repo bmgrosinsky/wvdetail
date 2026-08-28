@@ -31,7 +31,9 @@ export function Hero() {
           </p>
 
           <p className="mt-5 max-w-2xl text-base leading-relaxed text-wv-muted sm:text-lg">
-            {business.shortDescription}
+            Interior, exterior, and complete detailing for daily drivers in Jackson
+            County. Starting prices are published by vehicle size. You get a firm
+            quote before any work begins.
           </p>
 
           <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">

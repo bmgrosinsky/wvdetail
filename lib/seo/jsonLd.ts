@@ -1,5 +1,6 @@
 import { business } from '@/data/business';
 import { serviceAreas } from '@/data/serviceAreas';
+import { priceRange } from '@/data/services';
 import type { Faq } from '@/types';
 import { resolved } from '@/lib/todo';
 import { absoluteUrl } from './config';
@@ -136,9 +137,14 @@ function postalAddress(): JsonLdObject | undefined {
 }
 
 /**
- * LocalBusiness (AutoWash) schema built only from verified data.
+ * LocalBusiness (AutomotiveBusiness) schema built only from verified data.
  * Unverified "TODO:" values in `data/business.ts` are omitted entirely;
  * each field appears automatically once its value is filled in.
+ *
+ * `AutomotiveBusiness` (not `AutoWash`) because schema.org has no dedicated
+ * "auto detailing" subtype, and `AutoWash` mischaracterizes the business as
+ * an automated car wash. `AutomotiveBusiness` is the closest standard,
+ * Google-recognized LocalBusiness type.
  */
 export function localBusinessJsonLd(): JsonLdObject {
   const phone = resolved(business.phone);
@@ -149,7 +155,7 @@ export function localBusinessJsonLd(): JsonLdObject {
 
   return compact({
     '@context': 'https://schema.org',
-    '@type': 'AutoWash',
+    '@type': 'AutomotiveBusiness',
     '@id': `${absoluteUrl('/')}#business`,
     name: business.name,
     legalName: business.legalName,
@@ -158,6 +164,7 @@ export function localBusinessJsonLd(): JsonLdObject {
     slogan: business.tagline,
     telephone: phone ?? undefined,
     email: email ?? undefined,
+    priceRange: priceRange(),
     address,
     areaServed: serviceAreas.map((area) => ({
       '@type': 'City',

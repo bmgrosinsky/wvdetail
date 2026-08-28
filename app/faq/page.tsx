@@ -5,12 +5,13 @@ import { Section } from '@/components/ui/Section';
 import { ButtonLink } from '@/components/ui/Button';
 import { CTASection } from '@/components/marketing/CTASection';
 import { FAQAccordion } from '@/components/marketing/FAQAccordion';
+import { FaqJsonLd } from '@/components/seo/FaqJsonLd';
 import { publishedFaqs } from '@/data/faqs';
 import { business } from '@/data/business';
 import type { Faq, FaqCategory } from '@/types';
 
 export const metadata: Metadata = {
-  title: 'FAQ',
+  title: { absolute: `FAQ | ${business.name}` },
   description: `Answers to common questions about detailing services, pricing, vehicle sizes, and preparation from ${business.name} in ${business.cityState}.`,
   alternates: { canonical: '/faq' },
 };
@@ -45,6 +46,8 @@ export default function FaqPage() {
 
   return (
     <>
+      <FaqJsonLd items={publishedFaqs} />
+
       <section className="border-b border-wv-border bg-wv-black pt-14 pb-12 sm:pt-20 sm:pb-16">
         <Container size="wide">
           <div className="max-w-3xl">

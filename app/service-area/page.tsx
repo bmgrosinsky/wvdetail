@@ -14,7 +14,7 @@ const title = `Service Area | Detailing Across ${serviceAreas[0].county}`;
 const description = `${business.name} details vehicles in Jackson, Michigan Center, Blackman Township, Summit Township, Grass Lake, Napoleon, and Brooklyn, Michigan.`;
 
 export const metadata: Metadata = {
-  title: `Service Area in ${serviceAreas[0].county}, Michigan`,
+  title: { absolute: `Service Area in ${serviceAreas[0].county}, Michigan | ${business.name}` },
   description,
   alternates: { canonical: '/service-area' },
   openGraph: {

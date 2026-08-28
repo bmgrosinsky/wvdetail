@@ -13,7 +13,7 @@ import {
 import { business } from '@/data/business';
 
 export const metadata: Metadata = {
-  title: 'Gallery',
+  title: { absolute: `Gallery | ${business.name}` },
   description: `Before and after photos of interior, exterior, and complete detailing work by ${business.name} in ${business.cityState}.`,
   alternates: { canonical: '/gallery' },
 };

@@ -17,7 +17,7 @@ import { business } from '@/data/business';
 import type { Faq, Service } from '@/types';
 
 export const metadata: Metadata = {
-  title: 'Interior Detailing',
+  title: { absolute: `Interior Detailing in ${business.cityState} | ${business.name}` },
   description: `Interior detailing in ${business.cityState}. Vacuuming, carpets and seats, pet hair, salt and stain work, priced by vehicle size. Get a firm quote.`,
   alternates: { canonical: '/services/interior-detailing' },
 };

@@ -139,6 +139,11 @@ export function getService(slug: string): Service | undefined {
   return services.find((service) => service.slug === slug);
 }
 
+/** The dedicated lander page for a service's category, for internal linking. */
+export function categoryHref(category: Service['category']): string {
+  return `/services/${category}-detailing`;
+}
+
 export const featuredServices: readonly Service[] = services.filter(
   (service) => service.featured,
 );
@@ -147,4 +152,10 @@ export const featuredServices: readonly Service[] = services.filter(
 export function startingPrice(service: Service): number {
   const tiers: readonly VehicleClass[] = ['car', 'midsize', 'large'];
   return Math.min(...tiers.map((tier) => service.pricing[tier]));
+}
+
+/** `$min-$max` across every service and vehicle size, for schema.org `priceRange`. */
+export function priceRange(): string {
+  const allPrices = services.flatMap((service) => Object.values(service.pricing));
+  return `$${Math.min(...allPrices)}-$${Math.max(...allPrices)}`;
 }

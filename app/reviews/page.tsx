@@ -10,7 +10,7 @@ import { business } from '@/data/business';
 import { resolved } from '@/lib/todo';
 
 export const metadata: Metadata = {
-  title: 'Reviews',
+  title: { absolute: `Reviews | ${business.name}` },
   description: `Customer reviews for ${business.name}, an auto detailing service in ${business.cityState}. We publish real feedback only.`,
   alternates: { canonical: '/reviews' },
 };

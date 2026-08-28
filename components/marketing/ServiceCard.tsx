@@ -1,7 +1,7 @@
 import Link from 'next/link';
 import { ArrowRight } from 'lucide-react';
 import type { Service } from '@/types';
-import { startingPrice } from '@/data/services';
+import { categoryHref, startingPrice } from '@/data/services';
 import { primaryCta } from '@/data/navigation';
 import { buttonClasses } from '@/components/ui/Button';
 
@@ -34,7 +34,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
           Get a Quote
         </Link>
         <Link
-          href={`/services#${service.slug}`}
+          href={`${categoryHref(service.category)}#${service.slug}`}
           className="inline-flex items-center gap-1.5 text-sm font-medium text-wv-muted transition-colors hover:text-wv-text"
         >
           Details

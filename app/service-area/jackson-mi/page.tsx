@@ -11,15 +11,16 @@ import { serviceAreas } from '@/data/serviceAreas';
 import { conditionDisclaimer, services, startingPrice } from '@/data/services';
 import { primaryCta } from '@/data/navigation';
 
-const pageTitle = `Auto Detailing in ${business.city}, ${business.stateFull}`;
+const pageHeading = `Detailing for drivers in ${business.city}, ${business.stateFull}`;
+const pageTitle = `${business.city}, ${business.state} Service Area | ${business.name}`;
 const pageDescription = `Interior, exterior, and complete auto detailing in ${business.cityState}. Straightforward starting prices by vehicle size, and a firm quote before any work begins.`;
 
 export const metadata: Metadata = {
-  title: pageTitle,
+  title: { absolute: pageTitle },
   description: pageDescription,
   alternates: { canonical: '/service-area/jackson-mi' },
   openGraph: {
-    title: `${pageTitle} | ${business.name}`,
+    title: pageTitle,
     description: pageDescription,
     url: '/service-area/jackson-mi',
     type: 'website',
@@ -104,7 +105,7 @@ export default function JacksonDetailingPage() {
           {business.cityState}
         </p>
         <h1 className="text-3xl font-bold tracking-tight text-wv-text sm:text-4xl lg:text-5xl">
-          {pageTitle}
+          {pageHeading}
         </h1>
         <div className="mt-6 space-y-5 text-base leading-relaxed text-wv-muted sm:text-lg">
           <p>

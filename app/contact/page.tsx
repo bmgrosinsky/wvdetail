@@ -10,7 +10,7 @@ import { serviceAreaNames } from '@/data/serviceAreas';
 import { isTodo, resolved } from '@/lib/todo';
 
 export const metadata: Metadata = {
-  title: 'Contact',
+  title: { absolute: `Contact | ${business.name}` },
   description: `Contact ${business.name}, auto detailing in ${business.cityState}. Call, text, or send a message. For service pricing, request a quote.`,
   alternates: { canonical: '/contact' },
   openGraph: {

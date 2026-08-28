@@ -4,7 +4,7 @@ import { Container } from '@/components/ui/Container';
 import { business } from '@/data/business';
 import { footerNav } from '@/data/navigation';
 import { serviceAreaNames } from '@/data/serviceAreas';
-import { services } from '@/data/services';
+import { categoryHref, services } from '@/data/services';
 import { resolved } from '@/lib/todo';
 import { Logo } from './Logo';
 
@@ -23,7 +23,8 @@ export function Footer() {
           <div>
             <Logo withTagline />
             <p className="mt-4 max-w-xs text-sm leading-relaxed text-wv-muted">
-              {business.shortDescription}
+              Interior, exterior, and complete detailing for {business.cityState}
+              drivers, priced by vehicle size.
             </p>
           </div>
 
@@ -53,7 +54,7 @@ export function Footer() {
               {services.map((service) => (
                 <li key={service.slug}>
                   <Link
-                    href={`/services#${service.slug}`}
+                    href={`${categoryHref(service.category)}#${service.slug}`}
                     className="text-sm text-wv-muted transition-colors hover:text-wv-text"
                   >
                     {service.name}
