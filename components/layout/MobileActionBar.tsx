@@ -1,4 +1,7 @@
+'use client';
+
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 import { Phone } from 'lucide-react';
 import { business } from '@/data/business';
 import { primaryCta } from '@/data/navigation';
@@ -7,12 +10,18 @@ import { buttonClasses } from '@/components/ui/Button';
 import { analyticsEvents } from '@/lib/analytics/events';
 import { TrackedAnchor } from '@/components/analytics/TrackedAnchor';
 
+// Pages where a "Get Quote" CTA would be redundant with the page's own content.
+const HIDDEN_ON = ['/quote', '/contact'];
+
 /**
  * Restrained sticky action bar, mobile only.
  * The Call action is omitted entirely until a verified phone number exists.
  */
 export function MobileActionBar() {
+  const pathname = usePathname();
   const phoneHref = resolved(business.phoneHref);
+
+  if (HIDDEN_ON.includes(pathname)) return null;
 
   return (
     <div className="fixed inset-x-0 bottom-0 z-30 border-t border-wv-border bg-wv-black/95 backdrop-blur sm:hidden">

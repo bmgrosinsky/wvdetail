@@ -39,7 +39,7 @@ export function Footer() {
                 <li key={item.href}>
                   <Link
                     href={item.href}
-                    className="text-sm text-wv-muted transition-colors hover:text-wv-text"
+                    className="-my-1 inline-block py-1 text-sm text-wv-muted transition-colors hover:text-wv-text"
                   >
                     {item.label}
                   </Link>
@@ -57,7 +57,7 @@ export function Footer() {
                 <li key={service.slug}>
                   <Link
                     href={`${categoryHref(service.category)}#${service.slug}`}
-                    className="text-sm text-wv-muted transition-colors hover:text-wv-text"
+                    className="-my-1 inline-block py-1 text-sm text-wv-muted transition-colors hover:text-wv-text"
                   >
                     {service.name}
                   </Link>

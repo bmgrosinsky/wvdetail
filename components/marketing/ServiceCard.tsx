@@ -35,7 +35,7 @@ export function ServiceCard({ service }: ServiceCardProps) {
         </Link>
         <Link
           href={`${categoryHref(service.category)}#${service.slug}`}
-          className="inline-flex items-center gap-1.5 text-sm font-medium text-wv-muted transition-colors hover:text-wv-text"
+          className="-my-2 inline-flex items-center gap-1.5 py-2 text-sm font-medium text-wv-muted transition-colors hover:text-wv-text"
         >
           Details
           <ArrowRight className="h-3.5 w-3.5" aria-hidden="true" />
