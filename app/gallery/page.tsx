@@ -4,6 +4,7 @@ import { Section } from '@/components/ui/Section';
 import { CTASection } from '@/components/marketing/CTASection';
 import { GalleryGrid } from '@/components/gallery/GalleryGrid';
 import { GalleryEmptyState } from '@/components/gallery/GalleryEmptyState';
+import { TrackOnView } from '@/components/analytics/TrackOnView';
 import {
   galleryCategoriesInUse,
   galleryItems,
@@ -11,6 +12,7 @@ import {
   showGalleryFilters,
 } from '@/data/gallery';
 import { business } from '@/data/business';
+import { analyticsEvents } from '@/lib/analytics/events';
 
 export const metadata: Metadata = {
   title: { absolute: `Gallery | ${business.name}` },
@@ -21,6 +23,8 @@ export const metadata: Metadata = {
 export default function GalleryPage() {
   return (
     <>
+      <TrackOnView event={analyticsEvents.galleryViewed} params={{ hasPhotos: hasGalleryItems }} />
+
       <section className="border-b border-wv-border bg-wv-black pt-14 pb-12 sm:pt-20 sm:pb-16">
         <Container size="wide">
           <div className="max-w-3xl">

@@ -20,8 +20,8 @@ export function PricingCard({
   return (
     <article
       className={cn(
-        'flex h-full flex-col rounded-lg border bg-wv-surface p-6',
-        highlighted ? 'border-wv-red/50' : 'border-wv-border',
+        'flex h-full flex-col rounded-lg border bg-wv-surface p-6 transition-colors',
+        highlighted ? 'border-wv-red/50' : 'border-wv-border hover:border-wv-border-strong',
       )}
     >
       <div className="flex items-start justify-between gap-3">

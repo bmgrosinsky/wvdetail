@@ -1,9 +1,11 @@
 import { ArrowRight, Phone } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
-import { ButtonLink } from '@/components/ui/Button';
+import { ButtonLink, buttonClasses } from '@/components/ui/Button';
 import { business } from '@/data/business';
 import { primaryCta } from '@/data/navigation';
 import { resolved } from '@/lib/todo';
+import { analyticsEvents } from '@/lib/analytics/events';
+import { TrackedAnchor } from '@/components/analytics/TrackedAnchor';
 
 interface CTASectionProps {
   readonly title?: string;
@@ -39,10 +41,15 @@ export function CTASection({
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
             </ButtonLink>
             {phone && phoneHref ? (
-              <ButtonLink href={phoneHref} variant="light" size="lg">
+              <TrackedAnchor
+                href={phoneHref}
+                event={analyticsEvents.phoneClicked}
+                params={{ placement: 'cta_section' }}
+                className={buttonClasses('light', 'lg')}
+              >
                 <Phone className="h-4 w-4" aria-hidden="true" />
                 {phone}
-              </ButtonLink>
+              </TrackedAnchor>
             ) : null}
           </div>
         </div>

@@ -1,10 +1,12 @@
 import { Star } from 'lucide-react';
 import { Section } from '@/components/ui/Section';
 import { SectionHeading } from '@/components/ui/SectionHeading';
-import { ButtonLink } from '@/components/ui/Button';
+import { buttonClasses } from '@/components/ui/Button';
 import { reviews } from '@/data/reviews';
 import { business } from '@/data/business';
 import { resolved } from '@/lib/todo';
+import { analyticsEvents } from '@/lib/analytics/events';
+import { TrackedAnchor } from '@/components/analytics/TrackedAnchor';
 
 export function ReviewsSection() {
   const googleReviewsUrl = resolved(business.googleReviewsUrl);
@@ -57,9 +59,16 @@ export function ReviewsSection() {
           </p>
           <div className="mt-6">
             {googleReviewsUrl ? (
-              <ButtonLink href={googleReviewsUrl} variant="secondary" size="md">
+              <TrackedAnchor
+                href={googleReviewsUrl}
+                event={analyticsEvents.googleReviewsClicked}
+                params={{ placement: 'reviews_section' }}
+                target="_blank"
+                rel="noopener noreferrer"
+                className={buttonClasses('secondary', 'md')}
+              >
                 View Reviews on Google
-              </ButtonLink>
+              </TrackedAnchor>
             ) : (
               <p className="text-sm text-wv-subtle">
                 {/* TODO: replace with the verified Google reviews URL, then this

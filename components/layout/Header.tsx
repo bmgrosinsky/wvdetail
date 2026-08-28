@@ -5,6 +5,8 @@ import { buttonClasses } from '@/components/ui/Button';
 import { mainNav, primaryCta } from '@/data/navigation';
 import { business } from '@/data/business';
 import { resolved } from '@/lib/todo';
+import { analyticsEvents } from '@/lib/analytics/events';
+import { TrackedAnchor } from '@/components/analytics/TrackedAnchor';
 import { Logo } from './Logo';
 import { MobileNav } from './MobileNav';
 
@@ -35,13 +37,15 @@ export function Header() {
 
           <div className="flex items-center gap-2">
             {phone && phoneHref ? (
-              <a
+              <TrackedAnchor
                 href={phoneHref}
+                event={analyticsEvents.phoneClicked}
+                params={{ placement: 'header' }}
                 className="hidden items-center gap-2 text-sm font-medium text-wv-muted transition-colors hover:text-wv-text lg:inline-flex"
               >
                 <Phone className="h-4 w-4" aria-hidden="true" />
                 {phone}
-              </a>
+              </TrackedAnchor>
             ) : null}
             <Link
               href={primaryCta.href}

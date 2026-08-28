@@ -6,6 +6,8 @@ import { footerNav } from '@/data/navigation';
 import { serviceAreaNames } from '@/data/serviceAreas';
 import { categoryHref, services } from '@/data/services';
 import { resolved } from '@/lib/todo';
+import { analyticsEvents } from '@/lib/analytics/events';
+import { TrackedAnchor } from '@/components/analytics/TrackedAnchor';
 import { Logo } from './Logo';
 
 export function Footer() {
@@ -78,9 +80,14 @@ export function Footer() {
               {phone && phoneHref ? (
                 <li className="flex items-start gap-2.5">
                   <Phone className="mt-0.5 h-4 w-4 shrink-0 text-wv-subtle" aria-hidden="true" />
-                  <a href={phoneHref} className="transition-colors hover:text-wv-text">
+                  <TrackedAnchor
+                    href={phoneHref}
+                    event={analyticsEvents.phoneClicked}
+                    params={{ placement: 'footer' }}
+                    className="transition-colors hover:text-wv-text"
+                  >
                     {phone}
-                  </a>
+                  </TrackedAnchor>
                 </li>
               ) : null}
               {email ? (
@@ -97,14 +104,16 @@ export function Footer() {
                     className="mt-0.5 h-4 w-4 shrink-0 text-wv-subtle"
                     aria-hidden="true"
                   />
-                  <a
+                  <TrackedAnchor
                     href={facebookUrl}
+                    event={analyticsEvents.facebookClicked}
+                    params={{ placement: 'footer' }}
                     className="transition-colors hover:text-wv-text"
                     target="_blank"
                     rel="noreferrer"
                   >
                     Facebook
-                  </a>
+                  </TrackedAnchor>
                 </li>
               ) : null}
             </ul>

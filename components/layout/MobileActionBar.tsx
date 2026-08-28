@@ -4,6 +4,8 @@ import { business } from '@/data/business';
 import { primaryCta } from '@/data/navigation';
 import { resolved } from '@/lib/todo';
 import { buttonClasses } from '@/components/ui/Button';
+import { analyticsEvents } from '@/lib/analytics/events';
+import { TrackedAnchor } from '@/components/analytics/TrackedAnchor';
 
 /**
  * Restrained sticky action bar, mobile only.
@@ -19,10 +21,15 @@ export function MobileActionBar() {
           Get Quote
         </Link>
         {phoneHref ? (
-          <a href={phoneHref} className={buttonClasses('secondary', 'md', 'flex-1')}>
+          <TrackedAnchor
+            href={phoneHref}
+            event={analyticsEvents.phoneClicked}
+            params={{ placement: 'mobile_action_bar' }}
+            className={buttonClasses('secondary', 'md', 'flex-1')}
+          >
             <Phone className="h-4 w-4" aria-hidden="true" />
             Call
-          </a>
+          </TrackedAnchor>
         ) : null}
       </div>
     </div>

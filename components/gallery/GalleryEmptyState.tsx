@@ -1,7 +1,9 @@
 import { ArrowRight, Camera } from 'lucide-react';
-import { ButtonLink } from '@/components/ui/Button';
+import { ButtonLink, buttonClasses } from '@/components/ui/Button';
 import { business } from '@/data/business';
 import { resolved } from '@/lib/todo';
+import { analyticsEvents } from '@/lib/analytics/events';
+import { TrackedAnchor } from '@/components/analytics/TrackedAnchor';
 
 /**
  * Shown while `data/gallery.ts` is empty. We do not fill the grid with stock
@@ -30,9 +32,16 @@ export function GalleryEmptyState() {
           <ArrowRight className="h-4 w-4" aria-hidden="true" />
         </ButtonLink>
         {facebookUrl ? (
-          <ButtonLink href={facebookUrl} variant="secondary" size="lg">
+          <TrackedAnchor
+            href={facebookUrl}
+            event={analyticsEvents.facebookClicked}
+            params={{ placement: 'gallery_empty_state' }}
+            target="_blank"
+            rel="noopener noreferrer"
+            className={buttonClasses('secondary', 'lg')}
+          >
             See recent work on Facebook
-          </ButtonLink>
+          </TrackedAnchor>
         ) : null}
       </div>
 

@@ -10,10 +10,12 @@ import { ServiceDetail } from '@/components/services/ServiceDetail';
 import { VehicleSizeGuide } from '@/components/services/VehicleSizeGuide';
 import { AddonList } from '@/components/services/AddonList';
 import { PricingNote } from '@/components/services/PricingNote';
+import { TrackOnView } from '@/components/analytics/TrackOnView';
 import { getService } from '@/data/services';
 import { publishedFaqs } from '@/data/faqs';
 import { primaryCta } from '@/data/navigation';
 import { business } from '@/data/business';
+import { analyticsEvents } from '@/lib/analytics/events';
 import type { Faq, Service } from '@/types';
 
 export const metadata: Metadata = {
@@ -41,6 +43,8 @@ const faqs: readonly Faq[] = publishedFaqs.filter((faq) => faqIds.includes(faq.i
 export default function InteriorDetailingPage() {
   return (
     <>
+      <TrackOnView event={analyticsEvents.serviceViewed} params={{ category: 'interior' }} />
+
       <ServicePageHeader
         eyebrow="Interior detailing"
         title={`Interior detailing in ${business.cityState}`}

@@ -4,6 +4,8 @@ import { business } from '@/data/business';
 import { primaryCta } from '@/data/navigation';
 import { resolved } from '@/lib/todo';
 import { buttonClasses } from '@/components/ui/Button';
+import { analyticsEvents } from '@/lib/analytics/events';
+import { TrackedAnchor } from '@/components/analytics/TrackedAnchor';
 
 /**
  * Tap-friendly contact actions. Anything still unverified in `data/business.ts`
@@ -18,17 +20,27 @@ export function ContactActions() {
   return (
     <div className="flex flex-col gap-3 sm:flex-row sm:flex-wrap">
       {phone && phoneHref ? (
-        <a href={phoneHref} className={buttonClasses('primary', 'lg')}>
+        <TrackedAnchor
+          href={phoneHref}
+          event={analyticsEvents.phoneClicked}
+          params={{ placement: 'contact_actions' }}
+          className={buttonClasses('primary', 'lg')}
+        >
           <Phone className="h-4 w-4" aria-hidden="true" />
           Call {phone}
-        </a>
+        </TrackedAnchor>
       ) : null}
 
       {phone && smsHref ? (
-        <a href={smsHref} className={buttonClasses('secondary', 'lg')}>
+        <TrackedAnchor
+          href={smsHref}
+          event={analyticsEvents.textClicked}
+          params={{ placement: 'contact_actions' }}
+          className={buttonClasses('secondary', 'lg')}
+        >
           <MessageSquare className="h-4 w-4" aria-hidden="true" />
           Text {phone}
-        </a>
+        </TrackedAnchor>
       ) : null}
 
       <Link
@@ -40,15 +52,17 @@ export function ContactActions() {
       </Link>
 
       {facebookUrl ? (
-        <a
+        <TrackedAnchor
           href={facebookUrl}
+          event={analyticsEvents.facebookClicked}
+          params={{ placement: 'contact_actions' }}
           target="_blank"
           rel="noopener noreferrer"
           className={buttonClasses('secondary', 'lg')}
         >
           <ExternalLink className="h-4 w-4" aria-hidden="true" />
           Facebook
-        </a>
+        </TrackedAnchor>
       ) : null}
     </div>
   );

@@ -10,9 +10,11 @@ import { ServiceDetail } from '@/components/services/ServiceDetail';
 import { VehicleSizeGuide } from '@/components/services/VehicleSizeGuide';
 import { AddonList } from '@/components/services/AddonList';
 import { PricingNote } from '@/components/services/PricingNote';
+import { TrackOnView } from '@/components/analytics/TrackOnView';
 import { services } from '@/data/services';
 import { primaryCta } from '@/data/navigation';
 import { business } from '@/data/business';
+import { analyticsEvents } from '@/lib/analytics/events';
 import type { Service, ServiceCategory } from '@/types';
 
 export const metadata: Metadata = {
@@ -75,6 +77,8 @@ function servicesIn(category: ServiceCategory): readonly Service[] {
 export default function ServicesPage() {
   return (
     <>
+      <TrackOnView event={analyticsEvents.serviceViewed} params={{ category: 'all' }} />
+
       <ServicePageHeader
         eyebrow="Services"
         title={`Auto detailing services in ${business.cityState}`}

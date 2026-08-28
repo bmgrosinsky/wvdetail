@@ -7,6 +7,8 @@ import { business } from '@/data/business';
 import { conditionDisclaimer, services } from '@/data/services';
 import { resolved } from '@/lib/todo';
 import { cn } from '@/lib/cn';
+import { trackEvent } from '@/lib/analytics/gtag';
+import { analyticsEvents } from '@/lib/analytics/events';
 import { buttonClasses, Button } from '@/components/ui/Button';
 import {
   conditionFlagOptions,
@@ -91,6 +93,7 @@ export function QuoteForm({ initialService = '' }: QuoteFormProps) {
   const honeypotRef = useRef<HTMLInputElement | null>(null);
   const mountedAt = useRef<number | null>(null);
   const summaryRef = useRef<HTMLDivElement | null>(null);
+  const hasStartedRef = useRef(false);
 
   const phone = resolved(business.phone);
   const phoneHref = resolved(business.phoneHref);
@@ -103,11 +106,19 @@ export function QuoteForm({ initialService = '' }: QuoteFormProps) {
     mountedAt.current = Date.now();
   }, []);
 
+  const markStarted = (): void => {
+    if (hasStartedRef.current) return;
+    hasStartedRef.current = true;
+    trackEvent(analyticsEvents.quoteStarted);
+  };
+
   const update = <K extends keyof DraftState>(key: K, value: DraftState[K]): void => {
+    markStarted();
     setDraft((current) => ({ ...current, [key]: value }));
   };
 
   const toggleFlag = (value: string, checked: boolean): void => {
+    markStarted();
     const flag = value as ConditionFlag;
     setDraft((current) => ({
       ...current,
@@ -164,6 +175,7 @@ export function QuoteForm({ initialService = '' }: QuoteFormProps) {
 
     if (result.ok) {
       setStatus('success');
+      trackEvent(analyticsEvents.quoteSubmitted, { service: values.service });
       setDraft(emptyDraft);
       return;
     }
@@ -187,13 +199,25 @@ export function QuoteForm({ initialService = '' }: QuoteFormProps) {
         </p>
         <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           {phone && phoneHref ? (
-            <a href={phoneHref} className={buttonClasses('primary', 'md')}>
+            <a
+              href={phoneHref}
+              onClick={() =>
+                trackEvent(analyticsEvents.phoneClicked, { placement: 'quote_success' })
+              }
+              className={buttonClasses('primary', 'md')}
+            >
               <Phone className="h-4 w-4" aria-hidden="true" />
               Call {phone}
             </a>
           ) : null}
           {phone && smsHref ? (
-            <a href={smsHref} className={buttonClasses('secondary', 'md')}>
+            <a
+              href={smsHref}
+              onClick={() =>
+                trackEvent(analyticsEvents.textClicked, { placement: 'quote_success' })
+              }
+              className={buttonClasses('secondary', 'md')}
+            >
               <MessageSquare className="h-4 w-4" aria-hidden="true" />
               Text {phone}
             </a>
@@ -208,6 +232,19 @@ export function QuoteForm({ initialService = '' }: QuoteFormProps) {
   }
 
   const errorCount = Object.keys(errors).length;
+
+  const requiredFields = [
+    draft.year,
+    draft.make,
+    draft.model,
+    draft.size,
+    draft.service,
+    draft.name,
+    draft.phone,
+    draft.email,
+  ] as const;
+  const completedCount = requiredFields.filter((value) => value.trim() !== '').length;
+  const totalRequired = requiredFields.length;
 
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
@@ -228,6 +265,25 @@ export function QuoteForm({ initialService = '' }: QuoteFormProps) {
             {business.name} directly.
           </p>
         ) : null}
+      </div>
+
+      <div className="flex flex-col gap-1.5">
+        <div
+          role="progressbar"
+          aria-valuenow={completedCount}
+          aria-valuemin={0}
+          aria-valuemax={totalRequired}
+          aria-label="Required fields completed"
+          className="h-1.5 w-full overflow-hidden rounded-full bg-wv-surface-2"
+        >
+          <div
+            className="h-full rounded-full bg-wv-red-soft"
+            style={{ width: `${(completedCount / totalRequired) * 100}%` }}
+          />
+        </div>
+        <p className="text-xs text-wv-subtle">
+          {completedCount} of {totalRequired} required fields complete
+        </p>
       </div>
 
       <FormGroup
@@ -494,6 +550,15 @@ export function QuoteForm({ initialService = '' }: QuoteFormProps) {
             className={cn(fieldControlClasses, errors.notes && fieldErrorClasses)}
           />
         </Field>
+        {phone && smsHref ? (
+          <p className="text-sm text-wv-muted">
+            Have photos of the vehicle? Text them to{' '}
+            <a href={smsHref} className="font-medium text-wv-red-soft hover:text-wv-text">
+              {phone}
+            </a>{' '}
+            after you submit and we&apos;ll match them to your quote.
+          </p>
+        ) : null}
       </FormGroup>
 
       {/* Honeypot: hidden from people, tempting to bots. */}

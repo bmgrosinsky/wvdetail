@@ -124,7 +124,7 @@ export function ContactForm() {
         ref={summaryRef}
         tabIndex={-1}
         aria-live="polite"
-        className="focus:outline-none empty:hidden"
+        className="focus:outline-none"
       >
         {errorCount > 0 ? (
           <p className="rounded-md border border-wv-red-soft/40 bg-wv-surface-2 p-4 text-sm font-medium text-wv-red-soft">

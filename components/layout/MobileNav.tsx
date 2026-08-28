@@ -9,6 +9,8 @@ import { business } from '@/data/business';
 import { resolved } from '@/lib/todo';
 import { buttonClasses } from '@/components/ui/Button';
 import { cn } from '@/lib/cn';
+import { analyticsEvents } from '@/lib/analytics/events';
+import { trackEvent } from '@/lib/analytics/gtag';
 
 export function MobileNav() {
   const [open, setOpen] = useState<boolean>(false);
@@ -122,6 +124,9 @@ export function MobileNav() {
               {phone && phoneHref ? (
                 <a
                   href={phoneHref}
+                  onClick={() =>
+                    trackEvent(analyticsEvents.phoneClicked, { placement: 'mobile_nav' })
+                  }
                   className={buttonClasses('secondary', 'lg', 'mt-3 w-full')}
                 >
                   Call {phone}
