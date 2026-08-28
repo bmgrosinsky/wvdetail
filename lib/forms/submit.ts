@@ -1,5 +1,6 @@
 import { business } from '@/data/business';
 import { getService } from '@/data/services';
+import { discountEligibilityOptions } from '@/data/promotions';
 import { PROMO_HONORED_NOTE } from '@/lib/promo';
 import {
   conditionFlagOptions,
@@ -141,6 +142,9 @@ export async function submitQuote(
     'Interior condition': labelFor(conditionLevelOptions, values.interiorCondition),
     'Exterior condition': labelFor(conditionLevelOptions, values.exteriorCondition),
     'Condition notes': flags,
+    'Discount eligibility': values.discountEligibility
+      ? labelFor(discountEligibilityOptions, values.discountEligibility)
+      : 'None selected',
     'Preferred date': values.preferredDate?.trim() || 'Not specified',
     Notes: values.notes?.trim() || 'None',
   };

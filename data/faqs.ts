@@ -106,6 +106,15 @@ export const faqs: readonly Faq[] = [
     featured: false,
   },
   {
+    id: 'first-responder-discount',
+    question: 'Do you offer a military or first responder discount?',
+    answer:
+      'Yes. The Jackson Serves discount takes $20 off any service $150 or more, or $10 off anything below that, for military, veterans, police, fire, EMS, corrections officers, hospital staff, and teachers. Mention it on your quote request and bring valid ID at the time of service.',
+    category: 'pricing',
+    todo: false,
+    featured: false,
+  },
+  {
     id: 'get-quote',
     question: 'How do I get a quote?',
     answer:

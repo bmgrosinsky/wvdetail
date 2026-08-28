@@ -5,6 +5,7 @@ import Link from 'next/link';
 import { ArrowRight, ChevronDown, MessageSquare, Phone } from 'lucide-react';
 import { business } from '@/data/business';
 import { conditionDisclaimer, services } from '@/data/services';
+import { discountEligibilityOptions, discountEligibilityValues } from '@/data/promotions';
 import { resolved } from '@/lib/todo';
 import { cn } from '@/lib/cn';
 import { trackEvent } from '@/lib/analytics/gtag';
@@ -52,6 +53,7 @@ interface DraftState {
   name: string;
   phone: string;
   email: string;
+  discountEligibility: string;
   preferredDate: string;
   notes: string;
 }
@@ -66,12 +68,19 @@ const emptyDraft: DraftState = {
   name: '',
   phone: '',
   email: '',
+  discountEligibility: '',
   preferredDate: '',
   notes: '',
 };
 
 function isConditionLevel(value: string): value is ConditionLevel {
   return (conditionLevelValues as readonly string[]).includes(value);
+}
+
+function isDiscountEligibility(
+  value: string,
+): value is (typeof discountEligibilityValues)[number] {
+  return (discountEligibilityValues as readonly string[]).includes(value);
 }
 
 interface QuoteFormProps {
@@ -147,6 +156,9 @@ export function QuoteForm({ initialService = '' }: QuoteFormProps) {
       name: draft.name,
       phone: draft.phone,
       email: draft.email,
+      discountEligibility: isDiscountEligibility(draft.discountEligibility)
+        ? draft.discountEligibility
+        : undefined,
       preferredDate: draft.preferredDate,
       notes: draft.notes,
     };
@@ -427,6 +439,35 @@ export function QuoteForm({ initialService = '' }: QuoteFormProps) {
               aria-describedby={describedBy(errors.email && `${fieldId('email')}-error`)}
               className={cn(fieldControlClasses, errors.email && fieldErrorClasses)}
             />
+          </Field>
+
+          <Field
+            id={fieldId('discountEligibility')}
+            label="Discount eligibility"
+            hint="Military, veterans, police, fire, EMS, corrections, hospital, or teachers."
+            className="sm:col-span-2"
+          >
+            <select
+              id={fieldId('discountEligibility')}
+              name="discountEligibility"
+              value={draft.discountEligibility}
+              onChange={(event) => update('discountEligibility', event.target.value)}
+              aria-describedby={describedBy(`${fieldId('discountEligibility')}-hint`)}
+              className={fieldControlClasses}
+            >
+              <option value="">Not applicable</option>
+              {discountEligibilityOptions.map((option) => (
+                <option key={option.value} value={option.value}>
+                  {option.label}
+                </option>
+              ))}
+            </select>
+            <p className="mt-1 text-xs text-wv-subtle">
+              <Link href="/offers" className="text-wv-red-soft hover:text-wv-text">
+                See Jackson Serves discount details
+              </Link>
+              .
+            </p>
           </Field>
         </div>
       </FormGroup>

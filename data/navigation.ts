@@ -21,5 +21,6 @@ export const secondaryCta: NavLink = {
 
 export const footerNav: readonly NavLink[] = [
   ...mainNav,
+  { label: 'Offers', href: '/offers' },
   { label: 'Get a Quote', href: '/quote' },
 ];

@@ -1,5 +1,6 @@
 import { z } from 'zod';
 import { services } from '@/data/services';
+import { discountEligibilityValues } from '@/data/promotions';
 
 /**
  * Shared validation for the quote and contact forms.
@@ -119,6 +120,7 @@ export const quoteSchema = z.object({
   name: nameField,
   phone: phoneField,
   email: optionalEmailField,
+  discountEligibility: z.enum(discountEligibilityValues).optional(),
   preferredDate: z.string().trim().max(40).optional(),
   notes: z.string().trim().max(2000, 'Please use 2000 characters or fewer.').optional(),
 });

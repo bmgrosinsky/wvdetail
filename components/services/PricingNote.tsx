@@ -1,5 +1,7 @@
+import Link from 'next/link';
 import { Info } from 'lucide-react';
 import { conditionDisclaimer, oversizeNote } from '@/data/services';
+import { jacksonServesDiscount } from '@/data/promotions';
 
 /** Condition/pricing disclaimer. Render this near any price display. */
 export function PricingNote() {
@@ -13,6 +15,17 @@ export function PricingNote() {
           </h3>
           <p className="mt-2 text-sm leading-relaxed text-wv-muted">{conditionDisclaimer}</p>
           <p className="mt-3 text-sm text-wv-subtle">Oversized vehicles: {oversizeNote}.</p>
+          <p className="mt-3 text-sm text-wv-subtle">
+            Military, veterans, police, fire, EMS, corrections, hospital, and teachers:
+            ask about the{' '}
+            <Link
+              href="/offers"
+              className="font-medium text-wv-red-soft hover:text-wv-text"
+            >
+              {jacksonServesDiscount.name} discount
+            </Link>
+            .
+          </p>
         </div>
       </div>
     </div>
