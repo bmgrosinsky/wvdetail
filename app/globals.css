@@ -95,6 +95,20 @@ body {
   animation: wv-fade-up 500ms ease-out both;
 }
 
+@keyframes wv-cta-glow {
+  0%,
+  100% {
+    box-shadow: 0 0 0 0 rgba(210, 31, 39, 0.55);
+  }
+  50% {
+    box-shadow: 0 0 0 8px rgba(210, 31, 39, 0);
+  }
+}
+
+.wv-cta-glow {
+  animation: wv-cta-glow 2s ease-out infinite;
+}
+
 /* Subtle, non-repeating hero treatment: no imagery, no gradient wash. */
 .wv-hero-grid {
   background-image:

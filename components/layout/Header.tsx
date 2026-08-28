@@ -7,6 +7,7 @@ import { business } from '@/data/business';
 import { resolved } from '@/lib/todo';
 import { analyticsEvents } from '@/lib/analytics/events';
 import { TrackedAnchor } from '@/components/analytics/TrackedAnchor';
+import { PromoCtaLink } from '@/components/marketing/PromoCtaLink';
 import { Logo } from './Logo';
 import { MobileNav } from './MobileNav';
 
@@ -15,7 +16,7 @@ export function Header() {
   const phoneHref = resolved(business.phoneHref);
 
   return (
-    <header className="sticky top-0 z-40 border-b border-wv-border bg-wv-black/90 backdrop-blur supports-[backdrop-filter]:bg-wv-black/75">
+    <header className="sticky top-0 z-40 border-b border-wv-border bg-wv-black/95">
       <Container size="wide">
         <div className="flex h-14 items-center justify-between gap-4 sm:h-16">
           <Logo />
@@ -47,12 +48,12 @@ export function Header() {
                 {phone}
               </TrackedAnchor>
             ) : null}
-            <Link
+            <PromoCtaLink
               href={primaryCta.href}
               className={buttonClasses('primary', 'sm', 'hidden sm:inline-flex')}
             >
               {primaryCta.label}
-            </Link>
+            </PromoCtaLink>
             <MobileNav />
           </div>
         </div>

@@ -1,5 +1,6 @@
 import { business } from '@/data/business';
 import { getService } from '@/data/services';
+import { PROMO_HONORED_NOTE } from '@/lib/promo';
 import {
   conditionFlagOptions,
   conditionLevelOptions,
@@ -115,6 +116,7 @@ function withCaptcha(
 export async function submitQuote(
   values: QuoteFormValues,
   context: SubmitContext,
+  promoActive = false,
 ): Promise<SubmitResult> {
   if (!passesSpamChecks(context)) return FAILED;
 
@@ -144,6 +146,7 @@ export async function submitQuote(
   };
 
   if (email) payload.replyto = email;
+  if (promoActive) payload.Promo = PROMO_HONORED_NOTE;
 
   return post(withCaptcha(payload, context));
 }

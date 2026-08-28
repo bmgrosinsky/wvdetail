@@ -11,6 +11,7 @@ import { buttonClasses } from '@/components/ui/Button';
 import { cn } from '@/lib/cn';
 import { analyticsEvents } from '@/lib/analytics/events';
 import { trackEvent } from '@/lib/analytics/gtag';
+import { PromoCtaLink } from '@/components/marketing/PromoCtaLink';
 
 export function MobileNav() {
   const [open, setOpen] = useState<boolean>(false);
@@ -114,13 +115,13 @@ export function MobileNav() {
             </nav>
 
             <div className="border-t border-wv-border px-5 py-5">
-              <Link
+              <PromoCtaLink
                 href={primaryCta.href}
                 onClick={() => setOpen(false)}
                 className={buttonClasses('primary', 'lg', 'w-full')}
               >
                 {primaryCta.label}
-              </Link>
+              </PromoCtaLink>
               {phone && phoneHref ? (
                 <a
                   href={phoneHref}

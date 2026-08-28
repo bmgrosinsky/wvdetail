@@ -10,6 +10,8 @@ import { cn } from '@/lib/cn';
 import { trackEvent } from '@/lib/analytics/gtag';
 import { analyticsEvents } from '@/lib/analytics/events';
 import { buttonClasses, Button } from '@/components/ui/Button';
+import { PromoBadge } from '@/components/marketing/PromoBadge';
+import { usePromoCountdown } from '@/lib/hooks/usePromoCountdown';
 import {
   conditionFlagOptions,
   conditionLevelOptions,
@@ -91,6 +93,8 @@ export function QuoteForm({ initialService = '' }: QuoteFormProps) {
   const mountedAt = useRef<number | null>(null);
   const summaryRef = useRef<HTMLDivElement | null>(null);
   const hasStartedRef = useRef(false);
+  const promo = usePromoCountdown();
+  const [promoHonored, setPromoHonored] = useState(false);
 
   const phone = resolved(business.phone);
   const phoneHref = resolved(business.phoneHref);
@@ -166,10 +170,11 @@ export function QuoteForm({ initialService = '' }: QuoteFormProps) {
     };
 
     const values: QuoteFormValues = parsed.data;
-    const result = await submitQuote(values, context);
+    const result = await submitQuote(values, context, promo.active);
 
     if (result.ok) {
       setStatus('success');
+      setPromoHonored(promo.active);
       trackEvent(analyticsEvents.quoteSubmitted, { service: values.service });
       setDraft(emptyDraft);
       return;
@@ -192,6 +197,12 @@ export function QuoteForm({ initialService = '' }: QuoteFormProps) {
           We&apos;ll review the vehicle and service information and follow up using the
           contact information you provided.
         </p>
+        {promoHonored ? (
+          <p className="mt-3 text-sm font-medium text-wv-red-soft">
+            Your 10% Book Now discount was noted on this request — we&apos;ll apply it
+            when we follow up.
+          </p>
+        ) : null}
         <div className="mt-6 flex flex-col gap-3 sm:flex-row sm:flex-wrap">
           {phone && phoneHref ? (
             <a
@@ -245,6 +256,8 @@ export function QuoteForm({ initialService = '' }: QuoteFormProps) {
 
   return (
     <form onSubmit={handleSubmit} noValidate className="flex flex-col gap-6">
+      <PromoBadge />
+
       <div
         ref={summaryRef}
         tabIndex={-1}

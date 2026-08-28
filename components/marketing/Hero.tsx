@@ -1,9 +1,11 @@
 import { ArrowRight, MapPin } from 'lucide-react';
 import { Container } from '@/components/ui/Container';
-import { ButtonLink } from '@/components/ui/Button';
+import { ButtonLink, buttonClasses } from '@/components/ui/Button';
 import { business } from '@/data/business';
 import { primaryCta, secondaryCta } from '@/data/navigation';
 import { services, startingPrice } from '@/data/services';
+import { PromoBadge } from '@/components/marketing/PromoBadge';
+import { PromoCtaLink } from '@/components/marketing/PromoCtaLink';
 
 const lowestPrice = Math.min(...services.map(startingPrice));
 
@@ -36,11 +38,13 @@ export function Hero() {
             quote before any work begins.
           </p>
 
-          <div className="mt-8 flex flex-col gap-3 sm:flex-row sm:items-center">
-            <ButtonLink href={primaryCta.href} variant="primary" size="lg">
+          <PromoBadge className="mt-6" />
+
+          <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-center">
+            <PromoCtaLink href={primaryCta.href} className={buttonClasses('primary', 'lg')}>
               {primaryCta.label}
               <ArrowRight className="h-4 w-4" aria-hidden="true" />
-            </ButtonLink>
+            </PromoCtaLink>
             <ButtonLink href={secondaryCta.href} variant="secondary" size="lg">
               {secondaryCta.label}
             </ButtonLink>
